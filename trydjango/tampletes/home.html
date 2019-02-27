@@ -4,4 +4,16 @@
 {% block con %}
 <h1>home page</h1>
 <p>this is a templetes</p>
-{% endblock %}
+<ul>
+    {% for item in my_age %}
+    {% if item == 'abc'%}
+    <li>{{ item }}</li>
+    <li>hola</li>
+    {% else %}
+        <p>hello</p>
+        <p>bonjour</p>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %} 
+
