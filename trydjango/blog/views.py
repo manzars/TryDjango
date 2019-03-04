@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
 from django.views.generic import (
     CreateView,
@@ -9,6 +10,7 @@ from django.views.generic import (
 )
 
 from .models import Article
+from .forms import ArticleModelForm
 
 class ArticleListView(ListView):
     template_name = 'articles/article_list.html'
@@ -20,6 +22,43 @@ class ArticleDetailView(DetailView):
 
     def get_object(self, queryset=None):
         abc = self.kwargs.get('id')
-        print(abc)
-        print(type(get_object_or_404(Article, id = abc)))
+        #print(abc)
+        #print(type(get_object_or_404(Article, id = abc)))
         return get_object_or_404(Article, id = abc)
+
+class ArticleCreateView(CreateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+    #success_url = '/'
+
+    def form_valid(self, form):
+        #print(form.cleaned_data)
+        #print(super().form_valid(form))
+        #print(form)
+        return super().form_valid(form)
+
+class ArticleUpdateView(UpdateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+
+    def get_object(self):
+        id_ = self.kwargs.get("id")
+        return get_object_or_404(Article, id=id_)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+class ArticleDeleteView(DeleteView):
+    template_name = 'articles/article_delete.html'
+    queryset = Article.objects.all()
+
+    def get_object(self, queryset=None):
+        abc = self.kwargs.get('id')
+        #print(abc)
+        #print(type(get_object_or_404(Article, id = abc)))
+        return get_object_or_404(Article, id = abc)
+
+    def get_success_url(self):
+        return reverse('articles:article-list')
